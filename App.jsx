@@ -3,16 +3,25 @@ import Key from "./Key";
 
 export default function Pendu() {
   const [answer, setAnswer] = React.useState("pomme");
-  const [guessedLetters, setGuessedLetters] = React.useState([]);
+  const [guessedLetters, setGuessedLetters] = React.useState(new Set());
   console.log("refresh");
   console.log(guessedLetters);
-
+  /*
   function addLetter(letter) {
     console.log("addLetter " + letter);
     setGuessedLetters((prevArray) => {
       let newArray = [...prevArray, letter];
-      console.log(newArray);
+      console.log(new Set(newArray));
       return newArray;
+    });
+  }*/
+
+  function addLetter(letter) {
+    console.log("addLetter " + letter);
+    setGuessedLetters((prevSet) => {
+      let newSet = new Set([...prevSet, letter]);
+      console.log(newSet);
+      return newSet;
     });
   }
 
@@ -20,7 +29,7 @@ export default function Pendu() {
     .split("")
     .map((letter, index) => (
       <span key={index}>
-        {guessedLetters.includes(letter) ? letter.toUpperCase() : "."}
+        {guessedLetters.has(letter) ? letter.toUpperCase() : "."}
       </span>
     ));
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
