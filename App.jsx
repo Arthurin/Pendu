@@ -1,34 +1,31 @@
 import React from "react";
 import Key from "./Key";
+import { getRandomWord } from "./utils";
+import Confetti from "react-confetti-boom";
+import { clsx } from "clsx";
 
 export default function Pendu() {
-  const [answer, setAnswer] = React.useState("pomme");
+  // Arrow function pour éviter d'executer getRandomWord() à chaque rafraîchissement
+  const [difficultyLevel, setDifficultyLevel] = React.useState(0);
+  const [answer, setAnswer] = React.useState(() => getRandomWord());
   const [guessedLetters, setGuessedLetters] = React.useState(new Set());
 
   const answerSet = new Set(answer);
   const wrongLetters = guessedLetters.difference(answerSet);
+  /**
+   * Si on utilisait un tableau on aurait pu utiliser filter() par exemple :
+  const wrongGuessCount = guessedLetters.filter( letter => !answer.includes(letter)).length
+   */
+
   const correctLetters = guessedLetters.intersection(answerSet);
-  console.log("Mauvaises lettres :");
-  console.log(wrongLetters);
   const endGame = gameEnded();
   const missingLetters = endGame
     ? answerSet.difference(guessedLetters)
     : new Set();
-  /*
-  function addLetter(letter) {
-    console.log("addLetter " + letter);
-    setGuessedLetters((prevArray) => {
-      let newArray = [...prevArray, letter];
-      console.log(new Set(newArray));
-      return newArray;
-    });
-  }*/
 
   function addLetter(letter) {
-    console.log("addLetter " + letter);
     setGuessedLetters((prevSet) => {
       let newSet = new Set([...prevSet, letter]);
-      console.log(newSet);
       return newSet;
     });
   }
@@ -39,16 +36,16 @@ export default function Pendu() {
 
   // défaite à partir de la 7ème tentative
   function isLost() {
-    console.log(wrongLetters.size > 6);
     return wrongLetters.size > 6;
   }
 
   function gameEnded() {
-    console.log("game ended? " + (isWon() || isLost()));
     return isWon() || isLost();
   }
 
-  function newGame() {
+  function newGame(difficulty = 1) {
+    setDifficultyLevel(difficulty);
+    setAnswer(getRandomWord(difficulty));
     setGuessedLetters(new Set());
   }
 
@@ -66,8 +63,50 @@ export default function Pendu() {
         : ""}
     </span>
   ));
-  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+  // Petite amélioration de fin de projet : j'ai décomposé rapidemment en 3 lignes pour faire un affichage qui ressemble au clavier azerty
+  const alphabet = "azertyuiop";
+  const alphabet2 = "qsdfghjklm";
+  const alphabet3 = "wxcvbn";
+  //const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
   let keyboardElements = alphabet
+    .split("")
+    .map((letter, index) => (
+      <Key
+        key={index}
+        myLetter={letter}
+        endGame={endGame}
+        letterColor={
+          wrongLetters.has(letter)
+            ? "rgb(255, 76, 44)"
+            : correctLetters.has(letter)
+            ? "rgb(38, 174, 81)"
+            : "rgb(255, 188, 44)"
+        }
+        clickMethod={addLetter}
+      />
+    ));
+
+  let keyboardElements2 = alphabet2
+    .split("")
+    .map((letter, index) => (
+      <Key
+        key={index}
+        myLetter={letter}
+        endGame={endGame}
+        letterColor={
+          wrongLetters.has(letter)
+            ? "rgb(255, 76, 44)"
+            : correctLetters.has(letter)
+            ? "rgb(38, 174, 81)"
+            : "rgb(255, 188, 44)"
+        }
+        clickMethod={addLetter}
+      />
+    ));
+
+  let keyboardElements3 = alphabet3
     .split("")
     .map((letter, index) => (
       <Key
@@ -89,32 +128,71 @@ export default function Pendu() {
     <main>
       <header>
         <h1>Jeu du pendu</h1>
-        <p>Devine le mot en moins de 8 essais !</p>
-
-        <section>
-          <img
-            alt={`Nb d'erreur : ${wrongLetters.size}`}
-            src={`/${wrongLetters.size}.jpg`}
-          />
-        </section>
-
-        <section className="answer">{answerLettersElements}</section>
-
-        {isWon() ? (
-          <section className="game-status">
-            <h2>Tu as gagné !</h2>
-            <p>Bravo ! 🎉🥳🎉</p>
-          </section>
-        ) : (
-          ""
-        )}
-
-        <section className="keyboard">{keyboardElements}</section>
-
-        <button className="newGame" onClick={newGame}>
-          Nouvelle partie
-        </button>
+        <p>
+          Devine le mot, tu peux faire au maximum 7 erreurs avant d'être pendu !
+        </p>
       </header>
+
+      <section>
+        <img
+          alt={`Nb d'erreur : ${wrongLetters.size}`}
+          src={`/${wrongLetters.size}.jpg`}
+        />
+      </section>
+
+      <section className="answer">{answerLettersElements}</section>
+
+      {/**
+       * Accessibilité :
+       *  + ajout du role="status"
+       *  + aria-live permet de dire au screen-reader d'attendre d'afficher le reste du contenu lorsqu'il y a un nouveau render
+       *  - on pourrait améliorer l'app et faire encore plus accessible
+       */}
+      {isWon() && (
+        <section className="game-status" aria-live="polite" role="status">
+          <h2>Tu as gagné !</h2>
+          <p>Bravo ! 🎉🥳🎉</p>
+          <Confetti />
+        </section>
+      )}
+
+      <section className="keyboard">{keyboardElements}</section>
+      <section className="keyboard">{keyboardElements2}</section>
+      <section className="keyboard">{keyboardElements3}</section>
+
+      <div className="nouvellePartie">
+        <h2>Nouvelle partie</h2>
+      </div>
+      <section className="difficulte">
+        <button
+          className={clsx("difficultyLevel", "middle", {
+            isPressed: difficultyLevel == 0,
+          })}
+          onClick={() => newGame(0)}
+        >
+          Niveau Moyen
+        </button>
+        <button
+          className={clsx(
+            "difficultyLevel",
+            "hard",
+            difficultyLevel == 1 && "isPressed"
+          )}
+          onClick={() => newGame(1)}
+        >
+          Niveau Difficile
+        </button>
+        <button
+          className={clsx(
+            "difficultyLevel",
+            "veryHard",
+            difficultyLevel == 2 && "isPressed"
+          )}
+          onClick={() => newGame(2)}
+        >
+          Niveau Hardcore
+        </button>
+      </section>
     </main>
   );
 }

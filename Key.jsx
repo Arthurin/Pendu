@@ -3,11 +3,16 @@ export default function Key(props) {
     backgroundColor: props.letterColor,
   };
   function clickKey() {
-    console.log("click");
     props.clickMethod(props.myLetter);
   }
   return (
-    <button disabled={props.endGame} onClick={clickKey} style={styles}>
+    <button
+      disabled={props.endGame}
+      aria-disabled={props.endGame}
+      aria-label={`Letter ${props.myLetter}`}
+      onClick={clickKey}
+      style={styles}
+    >
       {props.myLetter.toUpperCase()}
     </button>
   );
