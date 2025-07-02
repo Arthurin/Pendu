@@ -2,6 +2,14 @@ import React from "react";
 import Key from "./Key";
 import { getRandomWord } from "./utils";
 import { clsx } from "clsx";
+import img0 from "./assets/0.jpg";
+import img1 from "./assets/1.jpg";
+import img2 from "./assets/2.jpg";
+import img3 from "./assets/3.jpg";
+import img4 from "./assets/4.jpg";
+import img5 from "./assets/5.jpg";
+import img6 from "./assets/6.jpg";
+import img7 from "./assets/7.jpg";
 
 export default function Pendu() {
   // Arrow function pour éviter d'executer getRandomWord() à chaque rafraîchissement
@@ -40,6 +48,27 @@ export default function Pendu() {
 
   function gameEnded() {
     return isWon() || isLost();
+  }
+
+  function getImage(nbError) {
+    switch (nbError) {
+      case 0:
+        return img0;
+      case 1:
+        return img1;
+      case 2:
+        return img2;
+      case 3:
+        return img3;
+      case 4:
+        return img4;
+      case 5:
+        return img5;
+      case 6:
+        return img6;
+      default:
+        return img7;
+    }
   }
 
   function newGame(difficulty = 1) {
@@ -135,7 +164,7 @@ export default function Pendu() {
       <section>
         <img
           alt={`Nb d'erreur : ${wrongLetters.size}`}
-          src={`/${wrongLetters.size}.jpg`}
+          src={getImage(wrongLetters.size)}
         />
       </section>
 
