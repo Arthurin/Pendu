@@ -157,7 +157,8 @@ export default function Pendu() {
       <header>
         <h1>Jeu du pendu</h1>
         <p>
-          Devine le mot, tu peux faire au maximum 7 erreurs avant d'être pendu !
+          Devine le mot mais attention : au bout de la 7ème erreur tu seras
+          pendu !
         </p>
       </header>
 
