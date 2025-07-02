@@ -1,7 +1,6 @@
 import React from "react";
 import Key from "./Key";
 import { getRandomWord } from "./utils";
-import Confetti from "react-confetti-boom";
 import { clsx } from "clsx";
 
 export default function Pendu() {
@@ -152,7 +151,6 @@ export default function Pendu() {
         <section className="game-status" aria-live="polite" role="status">
           <h2>Tu as gagné !</h2>
           <p>Bravo ! 🎉🥳🎉</p>
-          <Confetti />
         </section>
       )}
 
