@@ -1,10 +1,16 @@
 import {
   motsFaciles,
+  motsMoyens,
   motsDifficiles,
   motsTresDifficiles,
 } from "./dictionnaire.js";
 
-const dictionnaire = [motsFaciles, motsDifficiles, motsTresDifficiles];
+const dictionnaire = [
+  motsFaciles,
+  motsMoyens,
+  motsDifficiles,
+  motsTresDifficiles,
+];
 
 export function getRandomWord(difficultyLevel = 1) {
   const randomIndex = Math.floor(

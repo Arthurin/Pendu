@@ -14,7 +14,7 @@ import img7 from "./assets/7.jpg";
 
 export default function Pendu() {
   // Arrow function pour éviter d'executer getRandomWord() à chaque rafraîchissement
-  const [difficultyLevel, setDifficultyLevel] = React.useState(0);
+  const [difficultyLevel, setDifficultyLevel] = React.useState(1);
   const [answer, setAnswer] = React.useState(() => getRandomWord());
   const [guessedLetters, setGuessedLetters] = React.useState(new Set());
 
@@ -172,6 +172,10 @@ export default function Pendu() {
 
       <section className="answer">{answerLettersElements}</section>
 
+      <section className="keyboard">{keyboardElements}</section>
+      <section className="keyboard">{keyboardElements2}</section>
+      <section className="keyboard">{keyboardElements3}</section>
+
       {/**
        * Accessibilité :
        *  + ajout du role="status"
@@ -186,39 +190,45 @@ export default function Pendu() {
         </section>
       )}
 
-      <section className="keyboard">{keyboardElements}</section>
-      <section className="keyboard">{keyboardElements2}</section>
-      <section className="keyboard">{keyboardElements3}</section>
-
       <div className="nouvellePartie">
-        <h2>Nouvelle partie</h2>
+        <h2>Nouvelle partie ?</h2>
       </div>
       <section className="difficulte">
         <button
-          className={clsx("difficultyLevel", "middle", {
+          className={clsx("difficultyLevel", "green", {
             isPressed: difficultyLevel == 0,
           })}
           onClick={() => newGame(0)}
         >
+          Niveau Facile
+        </button>
+
+        <button
+          className={clsx("difficultyLevel", "yellow", {
+            isPressed: difficultyLevel == 1,
+          })}
+          onClick={() => newGame(1)}
+        >
           Niveau Moyen
         </button>
+
         <button
           className={clsx(
             "difficultyLevel",
-            "hard",
-            difficultyLevel == 1 && "isPressed"
+            "red",
+            difficultyLevel == 2 && "isPressed"
           )}
-          onClick={() => newGame(1)}
+          onClick={() => newGame(2)}
         >
           Niveau Difficile
         </button>
         <button
           className={clsx(
             "difficultyLevel",
-            "veryHard",
-            difficultyLevel == 2 && "isPressed"
+            "black",
+            difficultyLevel == 3 && "isPressed"
           )}
-          onClick={() => newGame(2)}
+          onClick={() => newGame(3)}
         >
           Niveau Hardcore
         </button>
