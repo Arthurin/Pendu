@@ -2,6 +2,7 @@ import React from "react";
 import Key from "./Key";
 import { getRandomWord } from "./utils";
 import { clsx } from "clsx";
+import Confetti from "react-confetti-boom";
 import img0 from "./assets/0.jpg";
 import img1 from "./assets/1.jpg";
 import img2 from "./assets/2.jpg";
@@ -181,6 +182,7 @@ export default function Pendu() {
         <section className="game-status" aria-live="polite" role="status">
           <h2>Tu as gagné !</h2>
           <p>Bravo ! 🎉🥳🎉</p>
+          <Confetti />
         </section>
       )}
 
